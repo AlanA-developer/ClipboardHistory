@@ -1,0 +1,28 @@
+# ── Build outputs ──
+bin/
+obj/
+publish/
+
+# ── SQLite database (runtime data) ──
+*.db
+*.db-shm
+*.db-wal
+
+# ── IDE / Editor ──
+.idea/
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# ── OS files ──
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ── Temporary / scratch files ──
+*.csx
+*.tmp
+*.log
