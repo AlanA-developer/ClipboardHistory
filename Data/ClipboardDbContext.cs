@@ -11,7 +11,8 @@ namespace ClipboardHistory.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=clipboard.db");
+            var dbPath = System.IO.Path.Combine(System.AppContext.BaseDirectory, "clipboard.db");
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
