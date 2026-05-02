@@ -155,7 +155,7 @@ Write-Host "    INSTALACION COMPLETADA CON EXITO" -ForegroundColor Green
 Write-Host "  ========================================" -ForegroundColor Green
 Write-Host "  Ejecutable : $ExePath" -ForegroundColor White
 Write-Host "  Inicio auto: Activado (HKCU\Run)" -ForegroundColor White
-Write-Host "  Atajo      : Ctrl + Shift + V" -ForegroundColor White
+Write-Host "  Atajo      : Alt + V (personalizable)" -ForegroundColor White
 Write-Host "  Bandeja    : Click derecho para salir" -ForegroundColor White
 Write-Host "  ========================================" -ForegroundColor Green
 Write-Host ""
