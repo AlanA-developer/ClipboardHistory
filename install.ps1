@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 #  ClipboardHistory — Instalador para Windows
 #  Ejecutar en PowerShell como Administrador (recomendado)
 #  o como usuario normal (instala en AppData del usuario)
@@ -160,8 +160,8 @@ Write-Host "  Bandeja    : Click derecho para salir" -ForegroundColor White
 Write-Host "  ========================================" -ForegroundColor Green
 Write-Host ""
 
-# Iniciar la aplicacion usando explorer para desenlazar el proceso de esta terminal
-Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList $ExePath | Out-Null
+# Iniciar la aplicacion usando cmd start para desenlazar el proceso de esta terminal
+cmd.exe /c start "" "$ExePath"
 Write-Ok "Aplicacion iniciada. Busca el icono en la bandeja del sistema."
 
 Write-Host ""
