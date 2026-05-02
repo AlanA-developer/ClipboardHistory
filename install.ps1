@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 #  ClipboardHistory — Instalador para Windows
 #  Ejecutar en PowerShell como Administrador (recomendado)
 #  o como usuario normal (instala en AppData del usuario)
