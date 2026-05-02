@@ -287,6 +287,139 @@
                     </ItemsControl>
                 </ScrollViewer>
             </TabItem>
+
+            <!-- ==================== Tab: Atajos ==================== -->
+            <TabItem Header="⌨️ Atajos" Background="Transparent">
+                <Grid Background="Transparent" Margin="0,8,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Add new shortcut button -->
+                    <ui:Button x:Name="AddShortcutButton"
+                               Grid.Row="0"
+                               Content="＋ Nuevo Atajo"
+                               Appearance="Primary"
+                               Click="AddShortcut_Click"
+                               Margin="4,0,4,8"
+                               HorizontalAlignment="Stretch"/>
+
+                    <!-- Shortcuts list -->
+                    <ScrollViewer x:Name="ShortcutsScrollViewer" Grid.Row="1" 
+                                  VerticalScrollBarVisibility="Auto" 
+                                  Background="Transparent">
+                        <ItemsControl x:Name="ShortcutsListView" Background="Transparent">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource ControlFillColorDefaultBrush}"
+                                            CornerRadius="8"
+                                            Margin="4,3"
+                                            Padding="14,10"
+                                            BorderBrush="{DynamicResource ControlStrokeColorDefaultBrush}"
+                                            BorderThickness="1">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <!-- Shortcut info -->
+                                            <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,8,0">
+                                                <TextBlock Text="{Binding Name}" 
+                                                           FontSize="13" FontWeight="SemiBold"
+                                                           Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+                                                <TextBlock Text="{Binding Target}" 
+                                                           FontSize="10" 
+                                                           TextTrimming="CharacterEllipsis"
+                                                           MaxWidth="200"
+                                                           Foreground="{DynamicResource TextFillColorTertiaryBrush}" 
+                                                           Margin="0,2,0,0"/>
+                                            </StackPanel>
+
+                                            <!-- Key combo badge -->
+                                            <Border Grid.Column="1"
+                                                    Background="#1A4C90D9"
+                                                    CornerRadius="6"
+                                                    Padding="10,5"
+                                                    Margin="4,0"
+                                                    VerticalAlignment="Center">
+                                                <TextBlock Text="{Binding ShortcutDisplay}" 
+                                                           FontSize="12" FontWeight="Bold"
+                                                           Foreground="#4C90D9"/>
+                                            </Border>
+
+                                            <!-- Delete button (hidden for built-in) -->
+                                            <ui:Button Grid.Column="2"
+                                                       Appearance="Secondary"
+                                                       Icon="{ui:SymbolIcon Delete24}"
+                                                       Click="DeleteShortcut_Click"
+                                                       Tag="{Binding}"
+                                                       ToolTip="Eliminar atajo"
+                                                       VerticalAlignment="Center"
+                                                       Margin="4,0,0,0"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Add/Edit shortcut form (collapsed by default) -->
+                    <Border x:Name="ShortcutFormPanel" Grid.Row="2" 
+                            Visibility="Collapsed"
+                            Background="{DynamicResource ControlFillColorDefaultBrush}"
+                            CornerRadius="10"
+                            Margin="4,8,4,4"
+                            Padding="16,14"
+                            BorderBrush="#4C90D9"
+                            BorderThickness="1.5">
+                        <StackPanel>
+                            <TextBlock Text="✨ Nuevo Atajo" 
+                                       FontSize="15" FontWeight="SemiBold" 
+                                       Margin="0,0,0,14"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
+
+                            <!-- Program selector -->
+                            <TextBlock Text="Programa" 
+                                       FontSize="11" FontWeight="SemiBold"
+                                       Margin="0,0,0,5"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <ComboBox x:Name="ProgramComboBox"
+                                      IsEditable="True"
+                                      IsTextSearchEnabled="True"
+                                      Margin="0,0,0,12"
+                                      HorizontalAlignment="Stretch"/>
+
+                            <!-- Key capture -->
+                            <TextBlock Text="Combinación de teclas" 
+                                       FontSize="11" FontWeight="SemiBold"
+                                       Margin="0,0,0,5"
+                                       Foreground="{DynamicResource TextFillColorSecondaryBrush}"/>
+                            <TextBox x:Name="KeyCaptureBox"
+                                     IsReadOnly="True"
+                                     Text="🎹 Haz clic aquí y presiona las teclas..."
+                                     Margin="0,0,0,14"
+                                     FontSize="13"
+                                     PreviewKeyDown="KeyCaptureBox_PreviewKeyDown"
+                                     GotFocus="KeyCaptureBox_GotFocus"/>
+
+                            <!-- Action buttons -->
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <ui:Button Content="Cancelar"
+                                           Appearance="Secondary"
+                                           Click="CancelShortcut_Click"
+                                           Margin="0,0,8,0"/>
+                                <ui:Button Content="💾 Guardar"
+                                           Appearance="Primary"
+                                           Click="SaveShortcut_Click"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </TabItem>
         </TabControl>
     </Grid>
 

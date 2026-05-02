@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -39,6 +41,8 @@ namespace ClipboardHistory
 
         // Image collection
         public ObservableCollection<ClipboardImageViewModel> ImageItems { get; set; } = new();
+        public ObservableCollection<KeyboardShortcut> Shortcuts { get; set; } = new();
+        private readonly List<int> _registeredHotkeyIds = new();
 
         public MainWindow()
         {
@@ -49,16 +53,20 @@ namespace ClipboardHistory
 
             _db = new ClipboardDbContext();
             _db.Database.EnsureCreated();
+            _db.EnsureShortcutsTableExists();
 
             ClipboardListView.ItemsSource = Items;
             PinnedListView.ItemsSource = PinnedItems;
             ImageListView.ItemsSource = ImageItems;
+            ShortcutsListView.ItemsSource = Shortcuts;
 
             // Seed mock data if the database is empty
             SeedMockDataIfEmpty();
             SeedMockImagesIfEmpty();
+            SeedDefaultShortcuts();
 
             LoadData();
+            LoadShortcuts();
 
             // Initialize system tray icon
             InitializeTrayIcon();
@@ -66,6 +74,7 @@ namespace ClipboardHistory
             this.Loaded += MainWindow_Loaded;
             this.Deactivated += (s, e) => this.Hide();
             this.PreviewKeyDown += MainWindow_PreviewKeyDown;
+            EnableAutoStartOnFirstRun();
         }
 
         #region System Tray Icon
@@ -75,7 +84,7 @@ namespace ClipboardHistory
             _trayIcon = new FormsApp.NotifyIcon
             {
                 Icon = CreateTrayIcon(),
-                Text = "Clipboard History — Ctrl+Shift+V",
+                Text = "Clipboard History — Alt+V",
                 Visible = true
             };
 
@@ -335,7 +344,7 @@ namespace ClipboardHistory
             _hwndSource?.AddHook(HwndHandler);
 
             Win32Api.AddClipboardFormatListener(_hwndSource!.Handle);
-            Win32Api.RegisterHotKey(_hwndSource.Handle, 9000, Win32Api.MOD_CONTROL | Win32Api.MOD_SHIFT, Win32Api.VK_V);
+            RegisterAllHotkeys();
         }
 
         private IntPtr HwndHandler(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam, ref bool handled)
@@ -344,9 +353,10 @@ namespace ClipboardHistory
             {
                 OnClipboardChanged();
             }
-            else if (msg == Win32Api.WM_HOTKEY && wparam.ToInt32() == 9000)
+            else if (msg == Win32Api.WM_HOTKEY)
             {
-                ShowAndFocus();
+                int hotkeyId = wparam.ToInt32();
+                HandleHotkeyPressed(hotkeyId);
             }
             return IntPtr.Zero;
         }
@@ -845,7 +855,7 @@ namespace ClipboardHistory
             if (_hwndSource != null)
             {
                 Win32Api.RemoveClipboardFormatListener(_hwndSource.Handle);
-                Win32Api.UnregisterHotKey(_hwndSource.Handle, 9000);
+                UnregisterAllHotkeys();
             }
             _trayIcon?.Dispose();
             base.OnClosed(e);
