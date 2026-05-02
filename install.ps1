@@ -160,8 +160,8 @@ Write-Host "  Bandeja    : Click derecho para salir" -ForegroundColor White
 Write-Host "  ========================================" -ForegroundColor Green
 Write-Host ""
 
-# Iniciar la aplicacion
-Start-Process $ExePath
+# Iniciar la aplicacion usando explorer para desenlazar el proceso de esta terminal
+Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList $ExePath | Out-Null
 Write-Ok "Aplicacion iniciada. Busca el icono en la bandeja del sistema."
 
 Write-Host ""
